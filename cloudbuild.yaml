@@ -1,0 +1,9 @@
+steps:
+
+## Build container image
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'gcr.io/proyecto-terraform/nginx:latest', '.' ]
+
+## Push container image to gcr
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'push', 'gcr.io/proyecto-terraform/nginx:latest']
