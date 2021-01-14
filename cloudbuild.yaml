@@ -4,8 +4,9 @@ steps:
   args:
   - '-c'
   - |
-    # copy files to destination
-    gcloud compute scp --zone ${_ZONE} index.html cloudbuild@${_INSTANCE_NAME}-vm:/var/www/html --tunnel-through-iap
+    gcloud compute start-iap-tunnel ${_INSTANCE_NAME}-vm 5555 \
+      --local-host-port=localhost:5555 \
+      --zone=${_ZONE} & sleep 5 && python echo_client.py
 substitutions:
   _ZONE: us-west1-c # default value
   _INSTANCE_NAME: iap-demo # default value
