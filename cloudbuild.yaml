@@ -1,5 +1,11 @@
 steps:
-
-- name: 'gcr.io/cloud-builders/gcloud'
-  entrypoint: 'bash'
-  args: [ './script.sh', '--foo']
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: /bin/sh
+  args:
+  - '-c'
+  - |
+    # copy files to destination
+    gcloud compute scp --zone ${_ZONE} index.html cloudbuild@${_INSTANCE_NAME}-vm:/var/www/html --tunnel-through-iap
+substitutions:
+  _ZONE: us-west1-c # default value
+  _INSTANCE_NAME: iap-demo-vm # default value
