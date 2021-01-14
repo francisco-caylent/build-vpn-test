@@ -8,4 +8,4 @@ steps:
     gcloud compute scp --zone ${_ZONE} index.html cloudbuild@${_INSTANCE_NAME}-vm:/var/www/html --tunnel-through-iap
 substitutions:
   _ZONE: us-west1-c # default value
-  _INSTANCE_NAME: iap-demo-vm # default value
+  _INSTANCE_NAME: iap-demo # default value
