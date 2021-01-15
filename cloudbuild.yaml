@@ -6,7 +6,6 @@ steps:
   - |
     gcloud compute networks create customvpc \
     --subnet-mode=custom \
-    --bgp-routing-mode=regional\
 
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: /bin/sh
