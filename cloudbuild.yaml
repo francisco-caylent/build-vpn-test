@@ -4,9 +4,12 @@ steps:
   args:
   - '-c'
   - |
-    gcloud compute start-iap-tunnel ${_INSTANCE_NAME}-vm 5555 \
-      --local-host-port=localhost:5555 \
-      --zone=${_ZONE} & sleep 5 && python echo_client.py
-substitutions:
-  _ZONE: us-west1-c # default value
-  _INSTANCE_NAME: iap-demo # default value
+    gcloud compute networks create customvpc \
+    --subnet-mode=custom \
+    --bgp-routing-mode=regional\
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: /bin/sh
+  args:
+  - '-c'
+  - |
+    gcloud compute networks delete customvpc
