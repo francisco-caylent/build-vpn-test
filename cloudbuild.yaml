@@ -27,13 +27,23 @@ steps:
     gcloud compute instances create private-instance \
     --boot-disk-auto-delete \
     --machine-type=n1-standard-1 \
-    --metadata startup-script= \
-    "sudo apt-get install tinyproxy && sudo service tinyproxy restart" \
-    --network=customvpn \
+    --metadata startup-script= \"echo \"This page was created from a start up script.\" ^> /info.html" \
+    --network=customvpc \
     --subnet=private-subnet \
     --preemptible \
     --tags tag-firewall \
     --zone=us-west1-a 
+
+ - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: /bin/sh
+  args:
+  - '-c'
+  - |
+    gcloud compute firewall-rules create private-firewall \
+    --network=customvpc \
+    --direction=ingress \
+    --action=allow \
+   
 
 # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
 #   entrypoint: /bin/sh

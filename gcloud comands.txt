@@ -14,7 +14,8 @@ gcloud compute networks subnets create private-subnet  \
 gcloud compute instances create private-instance \
 --boot-disk-auto-delete \
 --machine-type=n1-standard-1 \
---metadata startup-script="echo \"This page was created from a start up script.\" ^> /info.html" \
+--metadata startup-script= \
+"sudo apt-get install tinyproxy && sudo service tinyproxy restart" \
 --network=customvpn \
 --subnet=private-subnet \
 --preemptible \
