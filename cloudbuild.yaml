@@ -32,7 +32,7 @@ steps:
     --subnet=private-subnet \
     --preemptible \
     --tags tag-firewall \
-    --zone=us-west1-a 
+    --zone=us-west1-a \
 
  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: /bin/sh
