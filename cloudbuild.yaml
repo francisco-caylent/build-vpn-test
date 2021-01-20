@@ -4,50 +4,39 @@ steps:
   args:
   - '-c'
   - |
-    gcloud compute networks create customvpc \
-    --subnet-mode=custom \
-
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: /bin/sh
-  args:
-  - '-c'
-  - |
-    gcloud compute networks subnets create private-subnet  \
-    --network=customvpc \
-    --range=10.128.0.0/20 \
-    --enable-flow-logs \
-    --region=us-west1 \
-    --secondary-range range2=192.168.64.0/24 \
-
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: /bin/sh
-  args:
-  - '-c'
-  - |
     gcloud compute instances create private-instance \
     --boot-disk-auto-delete \
     --machine-type=n1-standard-1 \
-    --metadata startup-script="echo \"This page was created from a start up script.\" ^> /info.html" \
-    --network=customvpc \
+    --network=customvpn \
     --subnet=private-subnet \
-    --preemptible \
     --tags tag-firewall \
     --zone=us-west1-a \
 
- - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: /bin/sh
   args:
   - '-c'
   - |
-    gcloud compute firewall-rules create private-firewall \
-    --network=customvpc \
-    --direction=ingress \
+    gcloud compute firewall-rules create allow-ssh-ingress-from-iap \
+    --direction=INGRESS \
     --action=allow \
+    --rules=tcp:22 \
+    --source-ranges=35.235.240.0/20 \
+    --network=customvpn \
    
+   
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: /bin/sh
+  args:
+  - '-c'
+  - |
+    gcloud compute firewall-rules delete allow-ssh-ingress-from-iap \
 
-# - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-#   entrypoint: /bin/sh
-#   args:
-#   - '-c'
-#   - |
-#     gcloud compute networks delete customvpc
+
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: /bin/sh
+  args:
+  - '-c'
+  - |
+    gcloud compute instances delete private-instance \
+    --zone=us-west1-a \
